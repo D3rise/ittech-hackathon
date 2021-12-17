@@ -103,6 +103,7 @@ export default class Bot extends EventEmitter {
     }
 
     this.stage = new Scenes.Stage<IContext>(this.scenes);
+    this.telegraf.use(this.stage.middleware());
   }
 
   /**
