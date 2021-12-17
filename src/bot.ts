@@ -1,15 +1,18 @@
 import { EventEmitter } from "stream";
-import { Context, Telegraf } from "telegraf";
+import { Context, Scenes, Telegraf } from "telegraf";
 import { Update } from "telegraf/typings/core/types/typegram";
 import { Connection, ConnectionOptions, createConnection } from "typeorm";
 import { Logger, createLogger } from "winston";
 import { Console } from "winston/lib/winston/transports";
+import LocalStorage from "telegraf-session-local";
 import IContext from "./interface/context/context.interface";
 import ICommand from "./interface/module/command/command.interface";
 import IMiddleware from "./interface/module/middleware/middleware.interface";
 import IAction from "./interface/module/action/action.interface";
 import IHears from "./interface/module/hears/hears.interface";
 import IStartCommand from "./interface/module/command/startCommand.interface";
+import LocalSession from "telegraf-session-local";
+import { BaseScene } from "telegraf/typings/scenes";
 
 export default class Bot extends EventEmitter {
   telegraf: Telegraf<IContext>;
@@ -20,6 +23,8 @@ export default class Bot extends EventEmitter {
   hears: IHears[] = [];
   commands: ICommand[] = [];
   actions: IAction[] = [];
+  scenes: Scenes.BaseScene<IContext>[];
+  stage: Scenes.Stage<IContext>;
 
   /**
    * Bot is a class that allows us to create our own Telegram bot
@@ -37,6 +42,9 @@ export default class Bot extends EventEmitter {
     this._initDatabase(databaseOptions).then(() => {
       this._initTelegraf(token);
       this.telegraf.context.bot = this;
+      this.telegraf.use(
+        new LocalSession({ storage: LocalStorage.storageMemory }).middleware()
+      );
 
       this.emit("ready");
     });
@@ -44,7 +52,6 @@ export default class Bot extends EventEmitter {
 
   private _initTelegraf(token: string) {
     this.telegraf = new Telegraf<IContext>(token);
-
     this.logger.log("info", "Successfully initialized Telegraf client");
   }
 
@@ -73,6 +80,29 @@ export default class Bot extends EventEmitter {
   addCommand(command: ICommand) {
     this.commands.push(command);
     this.telegraf.command(command.name, command.exec);
+  }
+
+  /**
+   * Add scene to bot's stage
+   * @param scene Scene to add
+   */
+  addScene(scene: BaseScene<IContext>) {
+    if (this.stage) {
+      throw new Error("You can't add scenes after stage was created!");
+    }
+
+    this.scenes.push(scene);
+  }
+
+  /**
+   * Create bot's stage with all scenes that we added
+   */
+  createStage() {
+    if (this.stage) {
+      throw new Error("Stage already exists!");
+    }
+
+    this.stage = new Scenes.Stage<IContext>(this.scenes);
   }
 
   /**

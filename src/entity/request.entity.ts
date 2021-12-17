@@ -1,6 +1,7 @@
 import BaseEntity from "./base.entity";
 import UserEntity from "./user.entity";
-import { Column, ManyToOne } from "typeorm";
+import { Column, Entity, ManyToOne, OneToMany } from "typeorm";
+import DocumentEntity from "./document.entity";
 
 export enum RequestStatus {
   PROCESSING = "processing",
@@ -9,6 +10,7 @@ export enum RequestStatus {
   DOCS_PENDING = "docs_pending",
 }
 
+@Entity()
 export default class RequestEntity extends BaseEntity {
   @ManyToOne(() => UserEntity)
   author: UserEntity;
@@ -25,7 +27,7 @@ export default class RequestEntity extends BaseEntity {
   @Column()
   telephone: string;
 
-  @Column()
+  @OneToMany(() => DocumentEntity, (doc) => doc.request)
   documents: string[];
 
   @Column({ type: "enum", enum: RequestStatus })
