@@ -1,26 +1,35 @@
 import path from "path";
 import Bot from "./bot";
-import HelpCommand from "./module/command/help.command";
 import StartCommand from "./module/command/start.command";
 import ParseMiddleware from "./module/middleware/parse.middleware";
 import ValidateMiddleware from "./module/middleware/validate.middleware";
-import HelloAction from "./module/action/basic/hello.action";
-import HelloThereHears from "./module/hears/hellothere.hears";
+import MenuHears from "./module/hears/menu.hears";
+import UserMiddleware from "./module/middleware/user.middleware";
 
 const bot = new Bot(process.env.TELEGRAM_BOT_TOKEN!, {
   url: process.env.DB_URL,
   type: "postgres",
   entities: [path.join(__dirname, "entity", "*.entity.{js,ts}")],
+  synchronize: process.env.NODE_ENV !== "production",
 });
 
 bot.on("ready", () => {
+  // Middlewares
+  bot.useMiddleware(new UserMiddleware());
   bot.useMiddleware(new ParseMiddleware());
   bot.useMiddleware(new ValidateMiddleware());
 
-  bot.addHears(new HelloThereHears());
-  bot.addAction(new HelloAction());
-  bot.addCommand(new HelpCommand());
+  // Hears
+  bot.addHears(new MenuHears());
+
+  // Actions
+
+  // Commands
+
+  // Start command
   bot.addStartCommand(new StartCommand());
+
+  bot.createStage();
 
   bot.launch().catch(bot.logger.error);
 });
