@@ -1,9 +1,9 @@
 import { EventEmitter } from "stream";
-import { Context, Scenes, Telegraf } from "telegraf";
-import { Update } from "telegraf/typings/core/types/typegram";
+import { Scenes, Telegraf } from "telegraf";
 import { Connection, ConnectionOptions, createConnection } from "typeorm";
 import { Logger, createLogger } from "winston";
 import { Console } from "winston/lib/winston/transports";
+import { BaseScene } from "telegraf/typings/scenes";
 import LocalStorage from "telegraf-session-local";
 import IContext from "./interface/context/context.interface";
 import ICommand from "./interface/module/command/command.interface";
@@ -12,7 +12,6 @@ import IAction from "./interface/module/action/action.interface";
 import IHears from "./interface/module/hears/hears.interface";
 import IStartCommand from "./interface/module/command/startCommand.interface";
 import LocalSession from "telegraf-session-local";
-import { BaseScene } from "telegraf/typings/scenes";
 
 export default class Bot extends EventEmitter {
   telegraf: Telegraf<IContext>;
@@ -30,7 +29,6 @@ export default class Bot extends EventEmitter {
    * Bot is a class that allows us to create our own Telegram bot
    * @param {string} token Token of Telegram bot
    * @param {ConnectionOptions} databaseOptions Options to connect to database
-   * @param {Partial<Telegraf.Options<Context<Update>>> | undefined} telegrafOptions Optional options for Telegraf client
    */
   constructor(token: string, databaseOptions?: ConnectionOptions) {
     super();
