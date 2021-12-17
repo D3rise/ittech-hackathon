@@ -1,0 +1,16 @@
+services:
+  bot:
+    build: .
+    environment:
+      NODE_ENV: production
+    env_file:
+      - .env.production.local
+    depends_on:
+      - db
+    links:
+      - db
+
+  db:
+    image: postgres:${POSTGRES_VERSION}
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
