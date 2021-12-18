@@ -26,8 +26,8 @@ export default class Bot extends EventEmitter {
   hears: IHears[] = [];
   commands: ICommand[] = [];
   actions: IAction[] = [];
-  events: IEvent[];
-  customEvents: ICustomEvent[];
+  events: IEvent[] = [];
+  customEvents: ICustomEvent[] = [];
 
   scenes: Scenes.BaseScene<IContext>[] = [];
   stage: Scenes.Stage<IContext>;
@@ -188,7 +188,9 @@ export default class Bot extends EventEmitter {
    * @param ctx Context in which return to main menu
    */
   mainMenu(ctx: IContext) {
-    const menu = Markup.keyboard(["Отравить заявку на поступление"]);
+    const menu = Markup.keyboard(["Отправить заявку на поступление"])
+      .oneTime()
+      .resize();
     return ctx.reply("Что вы хотите сделать?", menu);
   }
 
