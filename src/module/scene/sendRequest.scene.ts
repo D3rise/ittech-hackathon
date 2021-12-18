@@ -2,7 +2,8 @@ import { deunionize, Markup, Scenes } from "telegraf";
 import IContext from "../../interface/context/context.interface";
 import RequestEntity from "../../entity/request.entity";
 import DocumentEntity from "../../entity/document.entity";
-import http, { IncomingMessage } from "http";
+import https from "https";
+import { IncomingMessage } from "http";
 
 const SendRequestScene = new Scenes.BaseScene<IContext>("ADD_DOCUMENT");
 
@@ -47,22 +48,24 @@ SendRequestScene.action("send", async (ctx: IContext) => {
     middlename: fullName[2],
     telephone: phoneNumber,
   });
+  await requestRepo.save(requestEntity);
 
   const documentEntity = documentRepo.create({
     request: requestEntity,
     fileName: document.fileName,
     minioId: `document:${requestEntity.id}:0:${document.type}`,
   });
+  await documentRepo.save(documentEntity);
 
   const url = await ctx.telegram.getFileLink(document.data.file_id);
-  http.get(url, (res: IncomingMessage) => {
+  https.get(url, (res: IncomingMessage) => {
     ctx.bot.minio.putObject(ctx.bot.minioBucket, documentEntity.minioId, res);
   });
 
   await ctx.answerCbQuery();
 
   ctx.bot.emit("newRequestEvent");
-  await ctx.reply("**Запрос был успешно отправлен колледжу!**");
+  await ctx.replyWithHTML("<i>Запрос был успешно отправлен колледжу!</i>");
   return ctx.scene.leave();
 });
 

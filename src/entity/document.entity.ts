@@ -4,7 +4,7 @@ import RequestEntity from "./request.entity";
 
 @Entity()
 export default class DocumentEntity extends BaseEntity {
-  @Column()
+  @Column({ nullable: true })
   fileName: string;
 
   @Column()
