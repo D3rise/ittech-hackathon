@@ -9,6 +9,8 @@ import NewRequestEvent from "./module/customEvent/newRequest.event";
 import SendRequestScene from "./module/scene/sendRequest.scene";
 import SendRequestHears from "./module/hears/sendRequest.hears";
 import AllRequestHears from "./module/hears/allRequest.hears";
+import DownloadDocumentsAction from "./module/action/downloadDocuments.action";
+import DownloadAllDocumentsHears from "./module/hears/downloadAllDocuments.hears";
 
 const bot = new Bot(
   "5010074589:AAF1ie3vZnMq9j0Z73Lv_J1JSNMS_wudlYQ",
@@ -42,8 +44,10 @@ bot.on("ready", () => {
   bot.addHears(new MenuHears());
   bot.addHears(new SendRequestHears());
   bot.addHears(new AllRequestHears());
+  bot.addHears(new DownloadAllDocumentsHears());
 
   // Actions
+  bot.addAction(new DownloadDocumentsAction());
 
   // Commands
 

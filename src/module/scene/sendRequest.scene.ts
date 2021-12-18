@@ -95,7 +95,7 @@ SendRequestScene.on("message", (ctx: IContext) => {
     }
 
     const fullName = text.split(" ");
-    if (fullName.length !== 3) {
+    if (fullName.length < 3 || fullName.length > 3) {
       return ctx.reply(wrongMessageError, defaultInlineKeyboard);
     }
 

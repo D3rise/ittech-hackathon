@@ -33,6 +33,8 @@ export default class Bot extends EventEmitter {
   scenes: Scenes.BaseScene<IContext>[] = [];
   stage: Scenes.Stage<IContext>;
 
+  mainMenuButton: string = "Вернуться в главное меню";
+
   /**
    * Bot is a class that allows us to create our own Telegram bot
    * @param {string} token Token of Telegram bot
@@ -62,6 +64,7 @@ export default class Bot extends EventEmitter {
         this.telegraf.use(
           new LocalSession({ storage: LocalStorage.storageMemory }).middleware()
         );
+        this.telegraf.use(Telegraf.log());
 
         this.emit("ready");
       });
@@ -148,7 +151,7 @@ export default class Bot extends EventEmitter {
    */
   addCustomEvent(event: ICustomEvent) {
     this.customEvents.push(event);
-    this.on(event.triggers, event.exec.bind(this, this));
+    this.on(event.triggers, event.exec.bind(event, this));
   }
 
   /**
@@ -173,6 +176,13 @@ export default class Bot extends EventEmitter {
   addAction(action: IAction) {
     this.actions.push(action);
     this.telegraf.action(action.triggers, action.exec);
+
+    if (action.dependsOn) {
+      for (const dependency of action.dependsOn) {
+        this.actions.push(dependency);
+        this.telegraf.action(dependency.triggers, dependency.exec);
+      }
+    }
   }
 
   /**
@@ -190,12 +200,34 @@ export default class Bot extends EventEmitter {
    */
   mainMenu(ctx: IContext) {
     const { user } = ctx.session;
-    const buttons = user.role === UserRole.USER
-      ? ["Отправить заявку на поступление", 'Все заявки']
-      : ['Сменить роль пользователю', 'Все заявки']
-    const menu = Markup.keyboard(buttons)
-      .oneTime()
-      .resize();
+    const buttons: string[] = [];
+
+    switch (user.role) {
+      case UserRole.USER:
+        buttons.push(
+          "Отправить заявку на поступление в колледж",
+          "Просмотреть статусы моих заявок",
+          "Удалить заявку"
+        );
+        break;
+      case UserRole.MODERATOR:
+        buttons.push(
+          "Все заявки",
+          "Просмотреть необработанные заявки",
+          "Просмотреть уже обработанные заявки",
+          "Скачать документы всех заявок",
+          "Запросить дополнительные документы"
+        );
+        break;
+      case UserRole.ADMIN:
+        buttons.push(
+          "Добавить модератора",
+          "Просмотреть список модераторов",
+          "Удалить модератора"
+        );
+    }
+
+    const menu = Markup.keyboard(buttons).resize();
     return ctx.reply("Что вы хотите сделать?", menu);
   }
 
