@@ -14,6 +14,7 @@ import IStartCommand from "./interface/module/command/startCommand.interface";
 import LocalSession from "telegraf-session-local";
 import ICustomEvent from "./interface/module/customEvent/customEvent.interface";
 import IEvent from "./interface/module/event/event.interface";
+import { UserRole } from "./entity/user.entity";
 
 export default class Bot extends EventEmitter {
   telegraf: Telegraf<IContext>;
@@ -188,7 +189,11 @@ export default class Bot extends EventEmitter {
    * @param ctx Context in which return to main menu
    */
   mainMenu(ctx: IContext) {
-    const menu = Markup.keyboard(["Отправить заявку на поступление"])
+    const { user } = ctx.session;
+    const buttons = user.role === UserRole.USER
+      ? ["Отправить заявку на поступление", 'Все заявки']
+      : ['Сменить роль пользователю', 'Все заявки']
+    const menu = Markup.keyboard(buttons)
       .oneTime()
       .resize();
     return ctx.reply("Что вы хотите сделать?", menu);
