@@ -5,6 +5,7 @@ import ParseMiddleware from "./module/middleware/parse.middleware";
 import ValidateMiddleware from "./module/middleware/validate.middleware";
 import MenuHears from "./module/hears/menu.hears";
 import UserMiddleware from "./module/middleware/user.middleware";
+import NewRequestEvent from "./module/event/applications";
 import SendRequestScene from "./module/scene/sendRequest.scene";
 import SendRequestHears from "./module/hears/sendRequest.hears";
 
