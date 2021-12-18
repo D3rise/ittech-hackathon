@@ -95,7 +95,7 @@ SendRequestScene.on("message", (ctx: IContext) => {
     }
 
     const fullName = text.split(" ");
-    if (fullName.length < 3 || fullName.length > 3) {
+    if (fullName.length !== 3) {
       return ctx.reply(wrongMessageError, defaultInlineKeyboard);
     }
 
@@ -110,7 +110,7 @@ SendRequestScene.on("message", (ctx: IContext) => {
   }
 
   function getPhone() {
-    const phoneRegexp = new RegExp(/^[+]*[(]?[0-9]{1,4}[)]?[-\s./0-9]*$/g);
+    const phoneRegexp = new RegExp(/^(?:8|\+7)[0-9]{10}$/);
     const wrongMessageError =
       'Неверный номер телефона! Вы должны ввести его в следующем формате: "+79287745621"' +
       "\nВведите номер телефона без пробелов, с указанием кода страны.";
