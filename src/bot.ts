@@ -1,9 +1,9 @@
 import { EventEmitter } from "stream";
-import { Scenes, Telegraf } from "telegraf";
+import { Markup, Scenes, Telegraf } from "telegraf";
 import { Connection, ConnectionOptions, createConnection } from "typeorm";
 import { Logger, createLogger } from "winston";
 import { Console } from "winston/lib/winston/transports";
-import { BaseScene } from "telegraf/typings/scenes";
+import * as Minio from "minio";
 import LocalStorage from "telegraf-session-local";
 import IContext from "./interface/context/context.interface";
 import ICommand from "./interface/module/command/command.interface";
@@ -18,6 +18,8 @@ import IEvent from "./interface/module/event/event.interface";
 export default class Bot extends EventEmitter {
   telegraf: Telegraf<IContext>;
   db: Connection;
+  minio: Minio.Client;
+  minioBucket: string;
   logger: Logger;
 
   startCommand: IStartCommand;
@@ -27,30 +29,41 @@ export default class Bot extends EventEmitter {
   events: IEvent[];
   customEvents: ICustomEvent[];
 
-  scenes: Scenes.BaseScene<IContext>[];
+  scenes: Scenes.BaseScene<IContext>[] = [];
   stage: Scenes.Stage<IContext>;
 
   /**
    * Bot is a class that allows us to create our own Telegram bot
    * @param {string} token Token of Telegram bot
    * @param {ConnectionOptions} databaseOptions Options to connect to database
+   * @param {Minio.ClientOptions} minioOptions Options for Minio client
+   * @param {string} minioBucketName
    */
-  constructor(token: string, databaseOptions?: ConnectionOptions) {
+  constructor(
+    token: string,
+    databaseOptions: ConnectionOptions,
+    minioOptions: Minio.ClientOptions,
+    minioBucketName: string
+  ) {
     super();
     this.logger = createLogger({
       level: process.env.NODE_ENV == "production" ? "info" : "debug",
       transports: [new Console()],
     });
 
-    this._initDatabase(databaseOptions).then(() => {
-      this._initTelegraf(token);
-      this.telegraf.context.bot = this;
-      this.telegraf.use(
-        new LocalSession({ storage: LocalStorage.storageMemory }).middleware()
-      );
+    this._initDatabase(databaseOptions)
+      .then(async () => {
+        await this._initMinio(minioOptions, minioBucketName);
+      })
+      .then(() => {
+        this._initTelegraf(token);
+        this.telegraf.context.bot = this;
+        this.telegraf.use(
+          new LocalSession({ storage: LocalStorage.storageMemory }).middleware()
+        );
 
-      this.emit("ready");
-    });
+        this.emit("ready");
+      });
   }
 
   private _initTelegraf(token: string) {
@@ -63,6 +76,16 @@ export default class Bot extends EventEmitter {
       ? await createConnection(options)
       : await createConnection();
     this.logger.log("info", "Successfully connected to database");
+  }
+
+  private async _initMinio(options: Minio.ClientOptions, bucketName: string) {
+    this.minio = new Minio.Client(options);
+    this.minioBucket = bucketName;
+
+    const exists = await this.minio.bucketExists(bucketName);
+    if (!exists) {
+      await this.minio.makeBucket(bucketName, "main");
+    }
   }
 
   /**
@@ -89,7 +112,7 @@ export default class Bot extends EventEmitter {
    * Add scene to bot's stage
    * @param scene Scene to add
    */
-  addScene(scene: BaseScene<IContext>) {
+  addScene(scene: Scenes.BaseScene<IContext>) {
     if (this.stage) {
       throw new Error("You can't add scenes after stage was created!");
     }
@@ -158,6 +181,15 @@ export default class Bot extends EventEmitter {
    */
   useMiddleware(middleware: IMiddleware) {
     this.telegraf.use(middleware.exec);
+  }
+
+  /**
+   * Return to main menu
+   * @param ctx Context in which return to main menu
+   */
+  mainMenu(ctx: IContext) {
+    const menu = Markup.keyboard(["Отравить заявку на поступление"]);
+    return ctx.reply("Что вы хотите сделать?", menu);
   }
 
   /**
