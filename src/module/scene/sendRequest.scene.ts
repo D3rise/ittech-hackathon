@@ -28,7 +28,8 @@ SendRequestScene.enter((ctx: IContext) => {
 // noinspection TypeScriptValidateJSTypes
 SendRequestScene.action("cancel", async (ctx: IContext) => {
   await ctx.answerCbQuery();
-  return ctx.bot.mainMenu(ctx);
+  await ctx.bot.mainMenu(ctx);
+  return ctx.scene.leave();
 });
 
 // noinspection TypeScriptValidateJSTypes
@@ -58,8 +59,11 @@ SendRequestScene.action("send", async (ctx: IContext) => {
     ctx.bot.minio.putObject(ctx.bot.minioBucket, documentEntity.minioId, res);
   });
 
+  await ctx.answerCbQuery();
+
   ctx.bot.emit("newRequestEvent");
   await ctx.reply("**Запрос был успешно отправлен колледжу!**");
+  return ctx.scene.leave();
 });
 
 // noinspection TypeScriptValidateJSTypes
