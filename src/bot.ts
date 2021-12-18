@@ -12,6 +12,8 @@ import IAction from "./interface/module/action/action.interface";
 import IHears from "./interface/module/hears/hears.interface";
 import IStartCommand from "./interface/module/command/startCommand.interface";
 import LocalSession from "telegraf-session-local";
+import ICustomEvent from "./interface/module/customEvent/customEvent.interface";
+import IEvent from "./interface/module/event/event.interface";
 
 export default class Bot extends EventEmitter {
   telegraf: Telegraf<IContext>;
@@ -22,6 +24,9 @@ export default class Bot extends EventEmitter {
   hears: IHears[] = [];
   commands: ICommand[] = [];
   actions: IAction[] = [];
+  events: IEvent[];
+  customEvents: ICustomEvent[];
+
   scenes: Scenes.BaseScene<IContext>[];
   stage: Scenes.Stage<IContext>;
 
@@ -93,7 +98,7 @@ export default class Bot extends EventEmitter {
   }
 
   /**
-   * Create bot's stage with all scenes that we added
+   * Create bots stage with all scenes that we added
    */
   createStage() {
     if (this.stage) {
@@ -102,6 +107,24 @@ export default class Bot extends EventEmitter {
 
     this.stage = new Scenes.Stage<IContext>(this.scenes);
     this.telegraf.use(this.stage.middleware());
+  }
+
+  /**
+   * Add event handler for Telegraf events
+   * @param {IEvent} event Event handler class
+   */
+  addEvent(event: IEvent) {
+    this.events.push(event);
+    this.telegraf.on(event.triggers, event.exec);
+  }
+
+  /**
+   * Add event handler for Bot events (not telegraf, but this class)
+   * @param {ICustomEvent} event Event handler to add
+   */
+  addCustomEvent(event: ICustomEvent) {
+    this.customEvents.push(event);
+    this.on(event.triggers, event.exec);
   }
 
   /**
