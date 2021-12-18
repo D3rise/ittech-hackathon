@@ -1,5 +1,6 @@
-import IBase from "../base.interface";
+import Bot from "../../../bot";
 
-export default interface ICustomEvent extends IBase {
+export default interface ICustomEvent {
   triggers: string | symbol;
+  exec(bot: Bot): any;
 }

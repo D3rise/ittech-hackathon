@@ -5,12 +5,12 @@ import ParseMiddleware from "./module/middleware/parse.middleware";
 import ValidateMiddleware from "./module/middleware/validate.middleware";
 import MenuHears from "./module/hears/menu.hears";
 import UserMiddleware from "./module/middleware/user.middleware";
-import NewRequestEvent from "./module/event/applications";
+import NewRequestEvent from "./module/customEvent/newRequest.event";
 import SendRequestScene from "./module/scene/sendRequest.scene";
 import SendRequestHears from "./module/hears/sendRequest.hears";
 
 const bot = new Bot(
-  '5010074589:AAF1ie3vZnMq9j0Z73Lv_J1JSNMS_wudlYQ',
+  "5010074589:AAF1ie3vZnMq9j0Z73Lv_J1JSNMS_wudlYQ",
   {
     url: process.env.DB_URL,
     type: "postgres",
@@ -22,7 +22,7 @@ const bot = new Bot(
     port: 9000,
     accessKey: "AKIAIOSFODNN7EXAMPLE",
     secretKey: "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY",
-    useSSL: false
+    useSSL: false,
   },
   "bottg"
 );

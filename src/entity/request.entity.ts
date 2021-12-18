@@ -37,6 +37,6 @@ export default class RequestEntity extends BaseEntity {
   })
   status: RequestStatus;
 
-  @Column()
+  @Column({ nullable: true })
   statusMessage: string;
 }

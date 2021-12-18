@@ -147,7 +147,7 @@ export default class Bot extends EventEmitter {
    */
   addCustomEvent(event: ICustomEvent) {
     this.customEvents.push(event);
-    this.on(event.triggers, event.exec);
+    this.on(event.triggers, event.exec.bind(this, this));
   }
 
   /**
