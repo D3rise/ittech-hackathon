@@ -21,8 +21,9 @@ const bot = new Bot(
     port: 9000,
     accessKey: "AKIAIOSFODNN7EXAMPLE",
     secretKey: "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY",
+    useSSL: false,
   },
-  "bot_tg"
+  "bottg"
 );
 
 bot.on("ready", () => {
