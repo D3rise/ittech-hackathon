@@ -1,6 +1,7 @@
 import { deunionize, Markup, Scenes } from "telegraf";
 import IContext from "../../interface/context/context.interface";
 import RequestEntity from "../../entity/request.entity";
+import { UserRole } from "../../entity/user.entity";
 const DownloadDocumentsScene = new Scenes.BaseScene<IContext>(
   "DOWNLOAD_DOCUMENTS"
 );
@@ -9,6 +10,10 @@ const defaultButtons = [Markup.button.callback("Отмена", "cancel")];
 const defaultInlineKeyboard = Markup.inlineKeyboard(defaultButtons);
 
 DownloadDocumentsScene.enter((ctx: IContext) => {
+  if (ctx.session.user.role !== UserRole.MODERATOR) {
+    return ctx.reply("Ошибка: У вас недостаточно прав!").then(ctx.scene.leave);
+  }
+
   ctx.session.downloadDocsScene = {
     data: {
       requestId: null,
@@ -58,6 +63,7 @@ DownloadDocumentsScene.on("message", (ctx: IContext) => {
       where: {
         id: requestId,
       },
+      relations: ["documents"],
     });
     if (!request) return ctx.reply(requestNotFoundError, defaultInlineKeyboard);
 

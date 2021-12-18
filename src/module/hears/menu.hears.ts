@@ -5,6 +5,6 @@ export default class MenuHears implements IHears {
   triggers = "Вернуться в главное меню";
 
   exec(ctx: IContext) {
-    return ctx.bot.mainMenu(ctx)
+    return ctx.bot.mainMenu(ctx);
   }
 }
