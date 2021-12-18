@@ -4,13 +4,26 @@ services:
     environment:
       NODE_ENV: production
     env_file:
-      - .env.production.local
+      - .env.docker-compose
     depends_on:
       - db
     links:
       - db
+      - minio
 
   db:
-    image: postgres:${POSTGRES_VERSION}
+    image: postgres:14-alpine
+    volumes:
+      - bot_tg_db:/var/lib/postgresql/data
     environment:
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_PASSWORD: 21oueasdkjbkaek
+
+  minio:
+    image: quay.io/minio/minio
+    volumes:
+      - bot_tg_minio:/data
+    environment:
+      - MINIO_ROOT_USER: AKIAIOSFODNN7EXAMPLE
+      - MINIO_ROOT_PASSWORD: wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
+    command:
+      - server /data

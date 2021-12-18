@@ -5,8 +5,8 @@ import { Markup } from "telegraf";
 export default class StartCommand implements Pick<ICommand, "exec"> {
   exec(ctx: IContext) {
     return ctx.reply(
-      "What do you want to do?",
-      Markup.keyboard(["Return to main menu"])
+      "Что вы хотите сделать?",
+      Markup.keyboard(["Отправить заявку на поступление"])
     );
   }
 }

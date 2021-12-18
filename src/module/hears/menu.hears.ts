@@ -3,12 +3,12 @@ import IContext from "../../interface/context/context.interface";
 import { Markup } from "telegraf";
 
 export default class MenuHears implements IHears {
-  triggers = "Return to main menu";
+  triggers = "Вернуться в главное меню";
 
   exec(ctx: IContext) {
     return ctx.reply(
-      "What do you want to do?",
-      Markup.keyboard(["Return to main menu"])
+      "Что вы хотите сделать?",
+      Markup.keyboard(["Отправить заявку на поступление"])
     );
   }
 }

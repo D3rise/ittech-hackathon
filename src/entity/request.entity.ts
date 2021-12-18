@@ -28,9 +28,13 @@ export default class RequestEntity extends BaseEntity {
   telephone: string;
 
   @OneToMany(() => DocumentEntity, (doc) => doc.request)
-  documents: string[];
+  documents: DocumentEntity[];
 
-  @Column({ type: "enum", enum: RequestStatus })
+  @Column({
+    type: "enum",
+    enum: RequestStatus,
+    default: RequestStatus.PROCESSING,
+  })
   status: RequestStatus;
 
   @Column()

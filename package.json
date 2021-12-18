@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/D3rise/ittech-hackathon-project#readme",
   "devDependencies": {
+    "@types/minio": "^7.0.11",
     "@types/node": "^16.11.12",
     "@typescript-eslint/parser": "^5.7.0",
     "dotenv": "^10.0.0",
@@ -32,6 +33,7 @@
   },
   "dependencies": {
     "joi": "^17.5.0",
+    "minio": "^7.0.25",
     "pg": "^8.7.1",
     "telegraf": "^4.5.2",
     "telegraf-session-local": "^2.1.0",
