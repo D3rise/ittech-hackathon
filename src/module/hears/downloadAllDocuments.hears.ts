@@ -4,7 +4,7 @@ import IContext from "../../interface/context/context.interface";
 import RequestEntity from "../../entity/request.entity";
 
 export default class DownloadAllDocumentsHears implements IHears {
-  triggers = "Скачать документы всех заявок";
+  triggers = "🗄 Скачать документы всех заявок";
 
   async exec(ctx: IContext) {
     const requestRepo = ctx.bot.db.getRepository(RequestEntity);

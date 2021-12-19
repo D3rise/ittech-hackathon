@@ -9,7 +9,7 @@ const AddPendingDocumentScene = new Scenes.BaseScene<IContext>(
   "ADD_PENDING_DOCUMENT"
 );
 
-const defaultKeyboardButtons = [Markup.button.callback("Отмена", "cancel")];
+const defaultKeyboardButtons = [Markup.button.callback("❌ Отмена", "cancel")];
 const defaultInlineKeyboard = Markup.inlineKeyboard(defaultKeyboardButtons);
 
 AddPendingDocumentScene.enter((ctx: IContext) => {

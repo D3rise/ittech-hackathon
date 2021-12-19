@@ -8,7 +8,7 @@ import { IncomingMessage } from "http";
 const SendRequestScene = new Scenes.BaseScene<IContext>("ADD_DOCUMENT");
 
 const defaultInlineKeyboardButtons = [
-  Markup.button.callback("Отмена", "cancel"),
+  Markup.button.callback("❌ Отмена", "cancel"),
 ];
 const defaultInlineKeyboard = Markup.inlineKeyboard(
   defaultInlineKeyboardButtons

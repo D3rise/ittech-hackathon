@@ -3,7 +3,7 @@ import IContext from "../../interface/context/context.interface";
 import PendingDocumentEntity from "../../entity/pendingDocument.entity";
 import RequestEntity, { RequestStatus } from "../../entity/request.entity";
 
-const defaultKeyboardButtons = [Markup.button.callback("Отмена", "cancel")];
+const defaultKeyboardButtons = [Markup.button.callback("❌ Отмена", "cancel")];
 const defaultKeyboard = Markup.inlineKeyboard(defaultKeyboardButtons);
 
 const RequestDocumentScene = new Scenes.BaseScene<IContext>("REQUEST_DOCUMENT");
