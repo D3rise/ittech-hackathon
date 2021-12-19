@@ -93,6 +93,15 @@ export default class Bot extends EventEmitter {
   }
 
   /**
+   * Emit event on bot
+   * @param eventName Name of event to emit
+   * @param args Arguments to provide to the handlers
+   */
+  emit(eventName: string | symbol, ...args: any[]) {
+    return super.emit(eventName, this, ...args);
+  }
+
+  /**
    * Add handler for messages with some content
    * @see https://telegraf.js.org/classes/Telegraf.html#hears
    * @param {IHears} hears Hears handler
@@ -151,7 +160,7 @@ export default class Bot extends EventEmitter {
    */
   addCustomEvent(event: ICustomEvent) {
     this.customEvents.push(event);
-    this.on(event.triggers, event.exec.bind(event, this));
+    this.on(event.triggers, event.exec);
   }
 
   /**

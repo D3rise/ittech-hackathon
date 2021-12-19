@@ -53,7 +53,7 @@ export default class DownloadDocumentsAction implements IAction {
       Markup.inlineKeyboard([
         Markup.button.callback(
           "Запросить доп. документы",
-          "dlDocs.requestMoreDoc"
+          `dlDocs.requestMoreDoc:${request.id}`
         ),
       ])
     );
@@ -61,9 +61,19 @@ export default class DownloadDocumentsAction implements IAction {
 }
 
 export class DownloadDocumentsMoreDocsAction implements IAction {
-  triggers = "dlDocs.requestMoreDoc";
+  triggers = /^dlDocs.requestMoreDoc.*$/g;
 
   exec(ctx: IContext) {
+    const cbData = deunionize(ctx.callbackQuery)?.data;
+    if (!cbData) return;
+
+    const requestId = cbData.split(":").at(-1);
+    if (!requestId) return;
+
+    ctx.session.requestDocumentScene = {
+      requestId,
+      data: null,
+    };
     return ctx.scene.enter("REQUEST_DOCUMENT");
   }
 }
