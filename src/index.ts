@@ -11,11 +11,26 @@ import SendRequestHears from "./module/hears/sendRequest.hears";
 import AllRequestHears from "./module/hears/allRequest.hears";
 import DownloadDocumentsAction from "./module/action/downloadDocuments.action";
 import DownloadAllDocumentsHears from "./module/hears/downloadAllDocuments.hears";
+import RequestDocumentScene from "./module/scene/requestDocument.scene";
+import RequestStatusChangeEvent from "./module/customEvent/requestStatusChange.event";
+
+const { TELEGRAM_BOT_TOKEN, MINIO_ACCESS_KEY, MINIO_SECRET_KEY, DB_URL } =
+  process.env;
+
+if (!TELEGRAM_BOT_TOKEN) {
+  console.log("Ошибка: Вы должны указать токен бота!");
+  process.exit(1);
+}
+
+if (!MINIO_ACCESS_KEY || !MINIO_SECRET_KEY) {
+  console.log("Ошибка: Вы должны указать данные для MinIO!");
+  process.exit(1);
+}
 
 const bot = new Bot(
-  "5010074589:AAF1ie3vZnMq9j0Z73Lv_J1JSNMS_wudlYQ",
+  TELEGRAM_BOT_TOKEN,
   {
-    url: process.env.DB_URL,
+    url: DB_URL,
     type: "postgres",
     entities: [path.join(__dirname, "entity", "*.entity.{js,ts}")],
     synchronize: process.env.NODE_ENV !== "production",
@@ -23,8 +38,8 @@ const bot = new Bot(
   {
     endPoint: "localhost",
     port: 9000,
-    accessKey: "AKIAIOSFODNN7EXAMPLE",
-    secretKey: "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY",
+    accessKey: MINIO_ACCESS_KEY,
+    secretKey: MINIO_SECRET_KEY,
     useSSL: false,
   },
   "bottg"
@@ -38,6 +53,7 @@ bot.on("ready", () => {
 
   // Scenes
   bot.addScene(SendRequestScene);
+  bot.addScene(RequestDocumentScene);
   bot.createStage();
 
   // Hears
@@ -56,6 +72,7 @@ bot.on("ready", () => {
 
   // Event
   bot.addCustomEvent(new NewRequestEvent());
+  bot.addCustomEvent(new RequestStatusChangeEvent());
 
   bot.launch().catch(bot.logger.error);
 });
