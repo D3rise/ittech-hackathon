@@ -15,6 +15,10 @@ import RequestDocumentScene from "./module/scene/requestDocument.scene";
 import RequestStatusChangeEvent from "./module/customEvent/requestStatusChange.event";
 import ShowRequestAction from "./module/action/showRequest.action";
 import { RequestDocumentAction } from "./module/action/requestDocument.action";
+import DeleteRequestAction from "./module/action/deleteRequest.action";
+import OperateRequestAction from "./module/action/operateRequest.action";
+import AddPendingDocumentScene from "./module/scene/addPendingDocument.scene";
+import AttachPendingDocumentAction from "./module/action/attachPendingDocument.action";
 
 const { TELEGRAM_BOT_TOKEN, MINIO_ACCESS_KEY, MINIO_SECRET_KEY, DB_URL } =
   process.env;
@@ -54,6 +58,7 @@ bot.on("ready", () => {
   bot.useMiddleware(new ValidateMiddleware());
 
   // Scenes
+  bot.addScene(AddPendingDocumentScene);
   bot.addScene(SendRequestScene);
   bot.addScene(RequestDocumentScene);
   bot.createStage();
@@ -68,6 +73,9 @@ bot.on("ready", () => {
   bot.addAction(new DownloadDocumentsAction());
   bot.addAction(new ShowRequestAction());
   bot.addAction(new RequestDocumentAction());
+  bot.addAction(new DeleteRequestAction());
+  bot.addAction(new OperateRequestAction());
+  bot.addAction(new AttachPendingDocumentAction());
 
   // Commands
 

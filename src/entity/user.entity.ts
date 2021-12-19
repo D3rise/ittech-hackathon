@@ -10,12 +10,15 @@ export enum UserRole {
 
 @Entity()
 export default class UserEntity extends BaseEntity {
-  @Column({ unique: true })
-  telegramId: number;
+  @Column({ type: "bigint", unique: true, nullable: true })
+  telegramId: string;
 
   @Column({ type: "enum", enum: UserRole, default: UserRole.USER })
   role: UserRole;
 
-  @OneToMany(() => RequestEntity, (req) => req.author)
+  @OneToMany(() => RequestEntity, (req) => req.author, { cascade: ["remove"] })
   requests: RequestEntity[];
+
+  @Column({ default: false })
+  eula: boolean;
 }

@@ -3,17 +3,25 @@ import IContext from "../../interface/context/context.interface";
 import RequestEntity, { RequestStatus } from "../../entity/request.entity";
 import { deunionize, Markup } from "telegraf";
 import { FindManyOptions } from "typeorm";
+import { UserRole } from "../../entity/user.entity";
 
 export default class AllRequestHears implements IHears {
   triggers = [
     "Просмотреть все заявки",
     "Просмотреть необработанные заявки",
     "Просмотреть уже обработанные заявки",
+    "Просмотреть мои заявки",
   ];
 
   async exec(ctx: IContext) {
     const text = deunionize(ctx.message)?.text;
     if (!text) return;
+    if (
+      ctx.session.user.role !== UserRole.MODERATOR &&
+      text !== "Просмотреть мои заявки"
+    ) {
+      return ctx.reply("Ошибка: недостаточно прав!");
+    }
 
     let findOptions: FindManyOptions<RequestEntity>;
 
@@ -42,6 +50,16 @@ export default class AllRequestHears implements IHears {
           ],
         };
         break;
+      case "Просмотреть мои заявки":
+        findOptions = {
+          where: {
+            author: {
+              telegramId: ctx.from?.id,
+            },
+          },
+          relations: ["author"],
+        };
+        break;
       default:
         findOptions = {};
     }
@@ -50,9 +68,7 @@ export default class AllRequestHears implements IHears {
     const requests = await requestRepository.find(findOptions);
     if (requests.length === 0) {
       return ctx.reply(
-        text === "Все заявки"
-          ? "Заявок нет!"
-          : "Заявок с такими параметрами не найдено!"
+        text === "Все заявки" ? "Заявок нет!" : "Заявки не найдены!"
       );
     }
 

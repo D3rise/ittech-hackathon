@@ -11,6 +11,7 @@ specifiers:
   eslint-config-prettier: ^8.3.0
   eslint-plugin-prettier: ^4.0.0
   joi: ^17.5.0
+  libphonenumber-js: ^1.9.44
   minio: ^7.0.25
   nodemon: ^2.0.15
   pg: ^8.7.1
@@ -25,6 +26,7 @@ specifiers:
 dependencies:
   archiver: 5.3.0
   joi: 17.5.0
+  libphonenumber-js: 1.9.44
   minio: 7.0.25
   pg: 8.7.1
   telegraf: 4.5.2
@@ -1754,6 +1756,10 @@ packages:
       prelude-ls: 1.2.1
       type-check: 0.4.0
     dev: true
+
+  /libphonenumber-js/1.9.44:
+    resolution: {integrity: sha512-zhw8nUMJuQf7jG1dZfEOKKOS6M3QYIv3HnvB/vGohNd0QfxIQcObH3a6Y6s350H+9xgBeOXClOJkS0hJ0yvS3g==}
+    dev: false
 
   /lodash.defaults/4.2.0:
     resolution: {integrity: sha1-0JF4cW/+pN3p5ft7N/bwgCJ0WAw=}

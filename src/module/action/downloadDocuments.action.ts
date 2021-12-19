@@ -3,6 +3,7 @@ import IContext from "../../interface/context/context.interface";
 import { deunionize, Markup } from "telegraf";
 import RequestEntity from "../../entity/request.entity";
 import archiver from "archiver";
+import { UserRole } from "../../entity/user.entity";
 
 export default class DownloadDocumentsAction implements IAction {
   triggers = /^downloadDocuments.*$/g;
@@ -47,14 +48,17 @@ export default class DownloadDocumentsAction implements IAction {
       },
       { caption: `Документы от запроса #${request.id}` }
     );
-    return ctx.reply(
-      "Нажмите эту кнопку, если захотите запросить у абитуриента дополнительные документы.",
-      Markup.inlineKeyboard([
-        Markup.button.callback(
-          "Запросить доп. документы",
-          `requestDocument:${request.id}`
-        ),
-      ])
-    );
+
+    if (ctx.session.user.role === UserRole.MODERATOR) {
+      await ctx.reply(
+        "Нажмите эту кнопку, если захотите запросить у абитуриента дополнительные документы.",
+        Markup.inlineKeyboard([
+          Markup.button.callback(
+            "Запросить доп. документы",
+            `requestDocument:${request.id}`
+          ),
+        ])
+      );
+    }
   }
 }
