@@ -28,15 +28,20 @@ import AllModeratorsHears from "./module/hears/allModerators.hears";
 import SelfIdHears from "./module/hears/selfId.hears";
 import { AddPendingDocumentEvent } from "./module/customEvent/addPendingDocument.event";
 
-const { TELEGRAM_BOT_TOKEN, MINIO_ACCESS_KEY, MINIO_SECRET_KEY, DB_URL } =
-  process.env;
+const {
+  TELEGRAM_BOT_TOKEN,
+  MINIO_HOST,
+  MINIO_ACCESS_KEY,
+  MINIO_SECRET_KEY,
+  DB_URL,
+} = process.env;
 
 if (!TELEGRAM_BOT_TOKEN) {
   console.log("Ошибка: Вы должны указать токен бота!");
   process.exit(1);
 }
 
-if (!MINIO_ACCESS_KEY || !MINIO_SECRET_KEY) {
+if (!MINIO_ACCESS_KEY || !MINIO_SECRET_KEY || !MINIO_HOST) {
   console.log("Ошибка: Вы должны указать данные для MinIO!");
   process.exit(1);
 }
@@ -50,7 +55,7 @@ const bot = new Bot(
     synchronize: process.env.NODE_ENV !== "production",
   },
   {
-    endPoint: "localhost",
+    endPoint: MINIO_HOST,
     port: 9000,
     accessKey: MINIO_ACCESS_KEY,
     secretKey: MINIO_SECRET_KEY,
