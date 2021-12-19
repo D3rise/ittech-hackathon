@@ -39,11 +39,11 @@ export default class ShowRequestAction implements IAction {
         }`;
         let inlineKeyboardButtons = [];
 
-        if (ctx.from?.id === request.author.telegramId) {
+        if (String(ctx.from?.id) === request.author.telegramId) {
           inlineKeyboardButtons.push(
             Markup.button.callback(
               "Прикрепить документ",
-              `attachPendingDocument:${requestId}:${doc.id}`
+              `attachPendingDocument:${doc.id}`
             )
           );
         }
@@ -88,7 +88,6 @@ export default class ShowRequestAction implements IAction {
         "Просмотреть треб. док.",
         `showRequest:pendingDocuments:${requestId}`
       ),
-      Markup.button.callback("Удалить", `deleteRequest:${requestId}`),
     ];
 
     switch (ctx.session.user.role) {
@@ -101,6 +100,13 @@ export default class ShowRequestAction implements IAction {
             `requestDocument:${requestId}`
           )
         );
+        break;
+      case UserRole.ADMIN:
+      case UserRole.USER:
+        inlineKeyboardButtons.push(
+          Markup.button.callback("Удалить", `deleteRequest:${requestId}`)
+        );
+        break;
     }
     const inlineKeyboard = Markup.inlineKeyboard(inlineKeyboardButtons);
 

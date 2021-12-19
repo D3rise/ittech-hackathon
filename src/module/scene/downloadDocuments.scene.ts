@@ -51,7 +51,7 @@ DownloadDocumentsScene.on("message", (ctx: IContext) => {
     const wrongMessageError =
       "Неверное сообщение! Пожалуйста, введите верный номер заявки.";
     const requestNotFoundError =
-      "Заявка с таким номеро не найдена! Пожалуйста, введите верный номер заявки.";
+      "Заявка с таким номером не найдена! Пожалуйста, введите верный номер заявки.";
 
     if (!text || !Number.isInteger(text))
       return ctx.reply(wrongMessageError, defaultInlineKeyboard);

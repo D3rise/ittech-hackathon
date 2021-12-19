@@ -13,7 +13,7 @@ export default class UserMiddleware implements IMiddleware {
     });
 
     if (!user) {
-      ctx.session.user = userRepo.create({ telegramId: ctx.from.id });
+      ctx.session.user = userRepo.create({ telegramId: String(ctx.from.id) });
       await userRepo.save(ctx.session.user);
       return next();
     }

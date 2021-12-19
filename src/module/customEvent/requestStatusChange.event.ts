@@ -47,8 +47,7 @@ export default class RequestStatusChangeEvent implements ICustomEvent {
       case RequestStatus.REJECTED:
         return bot.telegraf.telegram.sendMessage(
           author.telegramId,
-          `К сожалению, вашу заявку #${request.id} отклонили.\n` +
-            `Причина: ${request.statusMessage}`
+          `К сожалению, вашу заявку #${request.id} отклонили.\n`
         );
     }
   }
