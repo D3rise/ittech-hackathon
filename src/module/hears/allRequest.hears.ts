@@ -6,7 +6,7 @@ import { FindManyOptions } from "typeorm";
 
 export default class AllRequestHears implements IHears {
   triggers = [
-    "Все заявки",
+    "Просмотреть все заявки",
     "Просмотреть необработанные заявки",
     "Просмотреть уже обработанные заявки",
   ];
@@ -65,8 +65,8 @@ export default class AllRequestHears implements IHears {
           `<b>Номер телефона</b>: ${request.telephone}`,
         Markup.inlineKeyboard([
           Markup.button.callback(
-            "Скачать документы заявки",
-            `downloadDocuments:${request.id}`
+            "Просмотреть заявку",
+            `showRequest:${request.id}`
           ),
         ])
       );

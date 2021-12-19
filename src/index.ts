@@ -13,6 +13,8 @@ import DownloadDocumentsAction from "./module/action/downloadDocuments.action";
 import DownloadAllDocumentsHears from "./module/hears/downloadAllDocuments.hears";
 import RequestDocumentScene from "./module/scene/requestDocument.scene";
 import RequestStatusChangeEvent from "./module/customEvent/requestStatusChange.event";
+import ShowRequestAction from "./module/action/showRequest.action";
+import { RequestDocumentAction } from "./module/action/requestDocument.action";
 
 const { TELEGRAM_BOT_TOKEN, MINIO_ACCESS_KEY, MINIO_SECRET_KEY, DB_URL } =
   process.env;
@@ -64,6 +66,8 @@ bot.on("ready", () => {
 
   // Actions
   bot.addAction(new DownloadDocumentsAction());
+  bot.addAction(new ShowRequestAction());
+  bot.addAction(new RequestDocumentAction());
 
   // Commands
 
