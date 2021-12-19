@@ -18,7 +18,7 @@ export default class AllRequestHears implements IHears {
     if (!text) return;
     if (
       ctx.session.user.role !== UserRole.MODERATOR &&
-      text !== "Просмотреть мои заявки"
+      text !== "👀 Просмотреть мои заявки"
     ) {
       return ctx.reply("Ошибка: недостаточно прав!");
     }
@@ -26,7 +26,7 @@ export default class AllRequestHears implements IHears {
     let findOptions: FindManyOptions<RequestEntity>;
 
     switch (text) {
-      case "Просмотреть необработанные заявки":
+      case "📖 Просмотреть необработанные заявки":
         findOptions = {
           where: [
             {
@@ -38,7 +38,7 @@ export default class AllRequestHears implements IHears {
           ],
         };
         break;
-      case "Просмотреть уже обработанные заявки":
+      case "📕 Просмотреть уже обработанные заявки":
         findOptions = {
           where: [
             {
@@ -50,7 +50,7 @@ export default class AllRequestHears implements IHears {
           ],
         };
         break;
-      case "Просмотреть мои заявки":
+      case "👀 Просмотреть мои заявки":
         findOptions = {
           where: {
             author: {

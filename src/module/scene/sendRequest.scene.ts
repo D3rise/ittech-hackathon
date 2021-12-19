@@ -20,7 +20,7 @@ SendRequestScene.enter((ctx: IContext) => {
   };
   ctx.session.addDocumentScene.currentOperation = "getName";
   return ctx.reply(
-    'Пожалуйста, введите свое полное имя в следующем формате: "Имя Фамилия Отчество"',
+    'Пожалуйста, введите свое полное имя в следующем формате: "Фамилия Имя Отчество"',
     defaultInlineKeyboard
   );
 });
@@ -86,20 +86,23 @@ SendRequestScene.on("message", (ctx: IContext) => {
   }
 
   function getName() {
+    const nameRegexp =
+      /^[а-яА-ЯёЁa-zA-Z]+ [а-яА-ЯёЁa-zA-Z]+ [а-яА-ЯёЁa-zA-Z]+$/g;
     const wrongMessageError =
-      'Неверное сообщение! Вы должны ввести имя в следующем формате: "Имя Фамилия Отчество"' +
-      '\nНапример: "Иван Иванов Иванович"';
+      'Неверное сообщение! Вы должны ввести имя в следующем формате: "Фамилия Имя Отчество"' +
+      '\nНапример: "Иванов Иван Иванович"';
 
-    if (!text) {
+    if (!text || !nameRegexp.test(text)) {
       return ctx.reply(wrongMessageError, defaultInlineKeyboard);
     }
 
-    const fullName = text.split(" ");
-    if (fullName.length < 3 || fullName.length > 3) {
-      return ctx.reply(wrongMessageError, defaultInlineKeyboard);
-    }
-
-    ctx.session.addDocumentScene.data.fullName = fullName;
+    // Uppercase all parts of name
+    ctx.session.addDocumentScene.data.fullName = text
+      .split(" ")
+      .map(
+        (elem: string, i: number, arr) =>
+          (arr[i] = elem[0].toUpperCase() + elem.slice(1))
+      );
     ctx.session.addDocumentScene.currentOperation = "getPhone";
 
     return ctx.reply(
@@ -110,7 +113,7 @@ SendRequestScene.on("message", (ctx: IContext) => {
   }
 
   function getPhone() {
-    const phoneRegexp = new RegExp(/^(?:8|\+7)[0-9]{10}$/);
+    const phoneRegexp = new RegExp(/^(\+7)[0-9]{10}$/);
     const wrongMessageError =
       'Неверный номер телефона! Вы должны ввести его в следующем формате: "+79287745621"' +
       "\nВведите номер телефона без пробелов, с указанием кода страны.";
