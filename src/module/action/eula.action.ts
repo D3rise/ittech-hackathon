@@ -28,7 +28,7 @@ export default class EulaAction implements IAction {
       case "rejectEula":
         message =
           "Вы не сможете использовать бота до тех пор, пока не подтвердите согласие на обработку персональных данных.\n" +
-          "Ссылка на соглашение: ";
+          "Ссылка на соглашение: https://franko.su/data/files/soglash.docx";
         const inlineKeyboard = Markup.inlineKeyboard([
           Markup.button.callback("Принять", "acceptEula"),
           Markup.button.callback("Отклонить", "rejectEula"),

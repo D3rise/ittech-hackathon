@@ -52,7 +52,7 @@ const bot = new Bot(
     url: DB_URL,
     type: "postgres",
     entities: [path.join(__dirname, "entity", "*.entity.{js,ts}")],
-    synchronize: process.env.NODE_ENV !== "production",
+    synchronize: true,
   },
   {
     endPoint: MINIO_HOST,

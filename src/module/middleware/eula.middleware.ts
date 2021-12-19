@@ -8,7 +8,7 @@ export default class EulaMiddleware implements IMiddleware {
 
     const errorText =
       "Ошибка: Сначала вам необходимо подтвердить согласие на обработку персональных данных!\n" +
-      "Ссылка на соглашение: ";
+      "Ссылка на соглашение: https://franko.su/data/files/soglash.docx";
 
     const inlineKeyboard = Markup.inlineKeyboard([
       Markup.button.callback("Принять", "acceptEula"),
