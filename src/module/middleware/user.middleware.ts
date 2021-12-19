@@ -6,7 +6,7 @@ export default class UserMiddleware implements IMiddleware {
   async exec(ctx: IContext, next: () => any) {
     const userRepo = ctx.bot.db.getRepository(UserEntity);
 
-    if (ctx.session.user || !ctx.from) return next();
+    if (!ctx.from) return next();
 
     const user = await userRepo.findOne({
       where: { telegramId: ctx.from.id },

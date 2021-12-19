@@ -64,7 +64,7 @@ SendRequestScene.action("send", async (ctx: IContext) => {
 
   await ctx.answerCbQuery();
 
-  ctx.bot.emit("newRequestEvent");
+  ctx.bot.emit("newRequestEvent", requestEntity.id, fullName);
   await ctx.replyWithHTML("<i>Запрос был успешно отправлен колледжу!</i>");
   return ctx.scene.leave();
 });
@@ -86,8 +86,7 @@ SendRequestScene.on("message", (ctx: IContext) => {
   }
 
   function getName() {
-    const nameRegexp =
-      /^[а-яА-ЯёЁa-zA-Z]+ [а-яА-ЯёЁa-zA-Z]+ [а-яА-ЯёЁa-zA-Z]+$/g;
+    const nameRegexp = /^[а-яА-ЯёЁ]+ [а-яА-ЯёЁ]+ [а-яА-ЯёЁ]+$/g;
     const wrongMessageError =
       'Неверное сообщение! Вы должны ввести имя в следующем формате: "Фамилия Имя Отчество"' +
       '\nНапример: "Иванов Иван Иванович"';
@@ -112,7 +111,7 @@ SendRequestScene.on("message", (ctx: IContext) => {
     );
   }
 
-  function getPhone() {
+  async function getPhone() {
     const phoneRegexp = new RegExp(/^(\+7)[0-9]{10}$/);
     const wrongMessageError =
       'Неверный номер телефона! Вы должны ввести его в следующем формате: "+79287745621"' +
@@ -124,6 +123,15 @@ SendRequestScene.on("message", (ctx: IContext) => {
 
     if (!phoneRegexp.test(text)) {
       return ctx.reply(wrongMessageError, defaultInlineKeyboard);
+    }
+
+    const requestRepo = ctx.bot.db.getRepository(RequestEntity);
+    const exists = await requestRepo.findOne({ where: { telephone: text } });
+    if (exists) {
+      return ctx.reply(
+        "Ошибка: такой номер уже существует! Введите валидный номер телефона.",
+        defaultInlineKeyboard
+      );
     }
 
     ctx.session.addDocumentScene.data.phoneNumber = text;

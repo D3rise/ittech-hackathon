@@ -53,7 +53,7 @@ DownloadDocumentsScene.on("message", (ctx: IContext) => {
     const requestNotFoundError =
       "Заявка с таким номером не найдена! Пожалуйста, введите верный номер заявки.";
 
-    if (!text || !Number.isInteger(text))
+    if (!text || Number.isNaN(text))
       return ctx.reply(wrongMessageError, defaultInlineKeyboard);
 
     const requestRepo = ctx.bot.db.getRepository(RequestEntity);

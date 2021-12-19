@@ -209,15 +209,23 @@ export default class Bot extends EventEmitter {
    */
   mainMenu(ctx: IContext) {
     const { user } = ctx.session;
-    const buttons: string[] = [];
-
     if (!user.eula) return;
 
-    switch (user.role) {
+    const buttons = this.getMainMenu(user.role);
+
+    const menu = Markup.keyboard(buttons).resize();
+    return ctx.reply("Что вы хотите сделать?", menu);
+  }
+
+  getMainMenu(role: UserRole) {
+    const buttons: string[] = [];
+
+    switch (role) {
       case UserRole.USER:
         buttons.push(
           "✈ Отправить заявку на поступление в колледж",
-          "👀 Просмотреть мои заявки"
+          "👀 Просмотреть мои заявки",
+          "👓 Просмотреть свой ID"
         );
         break;
       case UserRole.MODERATOR:
@@ -225,20 +233,19 @@ export default class Bot extends EventEmitter {
           "👀 Просмотреть все заявки",
           "📖 Просмотреть необработанные заявки",
           "📕 Просмотреть уже обработанные заявки",
-          "🗄 Скачать документы всех заявок"
+          "🗄 Скачать документы всех заявок",
+          "👓 Просмотреть свой ID"
         );
         break;
       case UserRole.ADMIN:
         buttons.push(
           "➕ Добавить модератора",
           "➖ Удалить модератора",
-          "👀 Просмотреть список модераторов",
-          "👀 Просмотреть все заявки"
+          "👀 Просмотреть список модераторов"
         );
     }
 
-    const menu = Markup.keyboard(buttons).resize();
-    return ctx.reply("Что вы хотите сделать?", menu);
+    return buttons;
   }
 
   /**

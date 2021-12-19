@@ -22,6 +22,11 @@ import AttachPendingDocumentAction from "./module/action/attachPendingDocument.a
 import EulaMiddleware from "./module/middleware/eula.middleware";
 import EulaAction from "./module/action/eula.action";
 import OperationModeratorHears from "./module/hears/operationModerator.hears";
+import OperationModerScene from "./module/scene/operationModerator.scene";
+import RoleChangeEvent from "./module/customEvent/roleChange.event";
+import AllModeratorsHears from "./module/hears/allModerators.hears";
+import SelfIdHears from "./module/hears/selfId.hears";
+import { AddPendingDocumentEvent } from "./module/customEvent/addPendingDocument.event";
 
 const { TELEGRAM_BOT_TOKEN, MINIO_ACCESS_KEY, MINIO_SECRET_KEY, DB_URL } =
   process.env;
@@ -65,6 +70,7 @@ bot.on("ready", () => {
   bot.addScene(AddPendingDocumentScene);
   bot.addScene(SendRequestScene);
   bot.addScene(RequestDocumentScene);
+  bot.addScene(OperationModerScene);
   bot.createStage();
 
   // Hears
@@ -72,7 +78,9 @@ bot.on("ready", () => {
   bot.addHears(new SendRequestHears());
   bot.addHears(new AllRequestHears());
   bot.addHears(new DownloadAllDocumentsHears());
-  bot.addHears(new OperationModeratorHears())
+  bot.addHears(new OperationModeratorHears());
+  bot.addHears(new AllModeratorsHears());
+  bot.addHears(new SelfIdHears());
 
   // Actions
   bot.addAction(new DownloadDocumentsAction());
@@ -83,14 +91,14 @@ bot.on("ready", () => {
   bot.addAction(new AttachPendingDocumentAction());
   bot.addAction(new EulaAction());
 
-  // Commands
-
   // Start command
   bot.addStartCommand(new StartCommand());
 
   // Event
   bot.addCustomEvent(new NewRequestEvent());
   bot.addCustomEvent(new RequestStatusChangeEvent());
+  bot.addCustomEvent(new RoleChangeEvent());
+  bot.addCustomEvent(new AddPendingDocumentEvent());
 
   bot.launch().catch(bot.logger.error);
 });

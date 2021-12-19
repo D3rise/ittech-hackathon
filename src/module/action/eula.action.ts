@@ -4,10 +4,11 @@ import { deunionize, Markup } from "telegraf";
 import UserEntity from "../../entity/user.entity";
 
 export default class EulaAction implements IAction {
-  triggers = /(accept|reject)Eula/g;
+  triggers = ["acceptEula", "rejectEula"];
 
   async exec(ctx: IContext) {
     await ctx.answerCbQuery();
+    if (ctx.session.user.eula) return;
 
     const cbQuery = deunionize(ctx.callbackQuery);
     const data = cbQuery?.data;

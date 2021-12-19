@@ -5,7 +5,7 @@ import Bot from "../../bot";
 export default class NewRequestEvent implements ICustomEvent {
   triggers = "newRequestEvent";
 
-  async exec(bot: Bot) {
+  async exec(bot: Bot, requestId: number, fullName: string[]) {
     const userRepository = bot.db.getRepository(UserEntity);
 
     const managers = await userRepository.find({
@@ -18,7 +18,9 @@ export default class NewRequestEvent implements ICustomEvent {
       managers.map((manager) => {
         bot.telegraf.telegram.sendMessage(
           manager.telegramId,
-          `Создана новая заявка`
+          `Создана новая заявка от абитуриента по ФИО "${fullName.join(
+            " "
+          )}" под номером №${requestId}`
         );
       })
     );

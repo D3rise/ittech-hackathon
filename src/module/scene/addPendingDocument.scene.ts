@@ -88,6 +88,7 @@ async function getDocument(ctx: IContext) {
     ]);
 
     await ctx.reply("Документ успешно добавлен!");
+    ctx.bot.emit("addPendingDocument", request.id, pendingDocument.name);
     return ctx.scene.leave();
   });
 }
