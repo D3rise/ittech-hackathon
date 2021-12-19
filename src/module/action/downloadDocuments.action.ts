@@ -6,7 +6,6 @@ import archiver from "archiver";
 
 export default class DownloadDocumentsAction implements IAction {
   triggers = /^downloadDocuments.*$/g;
-  dependsOn = [new DownloadDocumentsMoreDocsAction()];
 
   async exec(ctx: IContext) {
     await ctx.answerCbQuery();
@@ -53,27 +52,9 @@ export default class DownloadDocumentsAction implements IAction {
       Markup.inlineKeyboard([
         Markup.button.callback(
           "Запросить доп. документы",
-          `dlDocs.requestMoreDoc:${request.id}`
+          `requestDocument:${request.id}`
         ),
       ])
     );
-  }
-}
-
-export class DownloadDocumentsMoreDocsAction implements IAction {
-  triggers = /^dlDocs.requestMoreDoc.*$/g;
-
-  exec(ctx: IContext) {
-    const cbData = deunionize(ctx.callbackQuery)?.data;
-    if (!cbData) return;
-
-    const requestId = cbData.split(":").at(-1);
-    if (!requestId) return;
-
-    ctx.session.requestDocumentScene = {
-      requestId,
-      data: null,
-    };
-    return ctx.scene.enter("REQUEST_DOCUMENT");
   }
 }

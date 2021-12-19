@@ -28,10 +28,14 @@ export default class RequestEntity extends BaseEntity {
   @Column()
   telephone: string;
 
-  @OneToMany(() => DocumentEntity, (doc) => doc.request)
+  @OneToMany(() => DocumentEntity, (doc) => doc.request, {
+    cascade: ["remove", "soft-remove"],
+  })
   documents: DocumentEntity[];
 
-  @OneToMany(() => PendingDocumentEntity, (doc) => doc.request)
+  @OneToMany(() => PendingDocumentEntity, (doc) => doc.request, {
+    cascade: ["remove", "soft-remove"],
+  })
   pendingDocuments: PendingDocumentEntity[];
 
   @Column({

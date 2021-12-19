@@ -221,7 +221,7 @@ export default class Bot extends EventEmitter {
         break;
       case UserRole.MODERATOR:
         buttons.push(
-          "Все заявки",
+          "Просмотреть все заявки",
           "Просмотреть необработанные заявки",
           "Просмотреть уже обработанные заявки",
           "Скачать документы всех заявок",
