@@ -3,8 +3,8 @@ services:
     build: .
     environment:
       NODE_ENV: production
-    env_file:
-      - .env.docker-compose
+    restart: always
+    env_file: .env.docker-compose
     depends_on:
       - db
       - minio
@@ -20,9 +20,11 @@ services:
       POSTGRES_PASSWORD: 21oueasdkjbkaek
 
   minio:
-    image: minio/minio:RELEASE.2021-04-22T15-44-28Z.hotfix.c1d7c4c9d
+    image: quay.io/minio/minio
     command:
       - server
+      - --address
+      - 0.0.0.0:9000
       - /data
     volumes:
       - "/data"
