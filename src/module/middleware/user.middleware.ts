@@ -19,5 +19,6 @@ export default class UserMiddleware implements IMiddleware {
     }
 
     ctx.session.user = user;
+    return next();
   }
 }
