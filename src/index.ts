@@ -21,6 +21,7 @@ import AddPendingDocumentScene from "./module/scene/addPendingDocument.scene";
 import AttachPendingDocumentAction from "./module/action/attachPendingDocument.action";
 import EulaMiddleware from "./module/middleware/eula.middleware";
 import EulaAction from "./module/action/eula.action";
+import OperationModeratorHears from "./module/hears/operationModerator.hears";
 
 const { TELEGRAM_BOT_TOKEN, MINIO_ACCESS_KEY, MINIO_SECRET_KEY, DB_URL } =
   process.env;
@@ -71,6 +72,7 @@ bot.on("ready", () => {
   bot.addHears(new SendRequestHears());
   bot.addHears(new AllRequestHears());
   bot.addHears(new DownloadAllDocumentsHears());
+  bot.addHears(new OperationModeratorHears())
 
   // Actions
   bot.addAction(new DownloadDocumentsAction());

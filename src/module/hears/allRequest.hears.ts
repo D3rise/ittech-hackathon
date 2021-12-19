@@ -66,7 +66,7 @@ export default class AllRequestHears implements IHears {
 
     const requestRepository = ctx.bot.db.getRepository(RequestEntity);
     const requests = await requestRepository.find(findOptions);
-    if (requests.length === 0) {
+    if (!requests.length) {
       return ctx.reply(
         text === "Все заявки" ? "Заявок нет!" : "Заявки не найдены!"
       );

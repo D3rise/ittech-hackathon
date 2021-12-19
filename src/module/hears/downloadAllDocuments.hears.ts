@@ -9,7 +9,7 @@ export default class DownloadAllDocumentsHears implements IHears {
   async exec(ctx: IContext) {
     const requestRepo = ctx.bot.db.getRepository(RequestEntity);
     const requests = await requestRepo.find({ relations: ["documents"] });
-    if (requests.length === 0) {
+    if (!requests.length) {
       return ctx.reply("Заявки еще не приходили!");
     }
     const archive = archiver("zip", { zlib: { level: 9 } });
