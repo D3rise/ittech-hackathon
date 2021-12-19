@@ -1,7 +1,6 @@
 import ICustomEvent from "../../interface/module/customEvent/customEvent.interface";
 import Bot from "../../bot";
 import RequestEntity, { RequestStatus } from "../../entity/request.entity";
-import UserEntity from "../../entity/user.entity";
 import { Markup } from "telegraf";
 
 export default class RequestStatusChangeEvent implements ICustomEvent {
@@ -19,7 +18,6 @@ export default class RequestStatusChangeEvent implements ICustomEvent {
     if (!request) return;
 
     const { author } = request;
-    const userRepo = bot.db.getRepository(UserEntity);
 
     switch (newStatus) {
       case RequestStatus.DOCS_PENDING:
@@ -48,6 +46,11 @@ export default class RequestStatusChangeEvent implements ICustomEvent {
         return bot.telegraf.telegram.sendMessage(
           author.telegramId,
           `К сожалению, вашу заявку #${request.id} отклонили.\n`
+        );
+      case RequestStatus.ACCEPTED:
+        return bot.telegraf.telegram.sendMessage(
+          author.telegramId,
+          `🎉 Поздравляем! Вашу заявку на поступление под номером ${request.id} приняли!`
         );
     }
   }

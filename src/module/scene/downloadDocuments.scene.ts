@@ -6,7 +6,7 @@ const DownloadDocumentsScene = new Scenes.BaseScene<IContext>(
   "DOWNLOAD_DOCUMENTS"
 );
 
-const defaultButtons = [Markup.button.callback("Отмена", "cancel")];
+const defaultButtons = [Markup.button.callback("❌ Отмена", "cancel")];
 const defaultInlineKeyboard = Markup.inlineKeyboard(defaultButtons);
 
 DownloadDocumentsScene.enter((ctx: IContext) => {
