@@ -35,7 +35,6 @@
   "dependencies": {
     "archiver": "^5.3.0",
     "joi": "^17.5.0",
-    "libphonenumber-js": "^1.9.44",
     "minio": "^7.0.25",
     "pg": "^8.7.1",
     "telegraf": "^4.5.2",

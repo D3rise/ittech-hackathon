@@ -211,6 +211,8 @@ export default class Bot extends EventEmitter {
     const { user } = ctx.session;
     const buttons: string[] = [];
 
+    if (!user.eula) return;
+
     switch (user.role) {
       case UserRole.USER:
         buttons.push(
@@ -230,7 +232,8 @@ export default class Bot extends EventEmitter {
         buttons.push(
           "➕ Добавить модератора",
           "➖ Удалить модератора",
-          "👀 Просмотреть список модераторов"
+          "👀 Просмотреть список модераторов",
+          "👀 Просмотреть все заявки"
         );
     }
 

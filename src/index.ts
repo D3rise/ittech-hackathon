@@ -19,6 +19,8 @@ import DeleteRequestAction from "./module/action/deleteRequest.action";
 import OperateRequestAction from "./module/action/operateRequest.action";
 import AddPendingDocumentScene from "./module/scene/addPendingDocument.scene";
 import AttachPendingDocumentAction from "./module/action/attachPendingDocument.action";
+import EulaMiddleware from "./module/middleware/eula.middleware";
+import EulaAction from "./module/action/eula.action";
 
 const { TELEGRAM_BOT_TOKEN, MINIO_ACCESS_KEY, MINIO_SECRET_KEY, DB_URL } =
   process.env;
@@ -54,6 +56,7 @@ const bot = new Bot(
 bot.on("ready", () => {
   // Middlewares
   bot.useMiddleware(new UserMiddleware());
+  bot.useMiddleware(new EulaMiddleware());
   bot.useMiddleware(new ParseMiddleware());
   bot.useMiddleware(new ValidateMiddleware());
 
@@ -76,6 +79,7 @@ bot.on("ready", () => {
   bot.addAction(new DeleteRequestAction());
   bot.addAction(new OperateRequestAction());
   bot.addAction(new AttachPendingDocumentAction());
+  bot.addAction(new EulaAction());
 
   // Commands
 
